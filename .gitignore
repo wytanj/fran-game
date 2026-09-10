@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.vercel/
+tools/shots/
+*.log
+.DS_Store
+Thumbs.db
+_p0_*

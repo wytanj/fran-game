@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+    <title>FRAN GAME · closing time</title>
+    <meta name="description" content="60 seconds after closing, Wisp goes feral. Yoink, haul, scoff. It's all a dream." />
+    <link rel="icon" type="image/png" href="/logo-2c.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Caveat:wght@600;700&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="store"></canvas>
+
+      <div class="hud" id="hud" aria-live="polite">
+        <div class="hud-tl">
+          <p class="eyebrow">Closing time</p>
+          <div class="timer" id="timer">60</div>
+        </div>
+
+        <div class="hud-tr">
+          <p class="eyebrow">Banked</p>
+          <div class="score" id="score">0</div>
+          <p class="best" id="best">Best · 0</p>
+        </div>
+
+        <div class="hud-bc" id="haul">
+          <div class="haul-stack" id="haul-stack" aria-hidden="true"></div>
+          <div class="haul-count"><span id="haul-count">0</span> loose</div>
+          <p class="hint" id="hint">Hold Yoink beside a shelf.</p>
+        </div>
+
+        <button type="button" class="yoink" id="btn-yoink" aria-label="Yoink (hold)">
+          <span class="yoink-word">Yoink</span>
+          <span class="yoink-key"><kbd>space</kbd></span>
+        </button>
+
+        <div class="joystick" id="joystick" aria-hidden="true">
+          <div class="joystick-base">
+            <div class="joystick-knob" id="joystick-knob"></div>
+          </div>
+        </div>
+
+        <div class="toasts" id="toasts"></div>
+        <div class="popups" id="popups"></div>
+        <div class="vignette" id="vignette"></div>
+      </div>
+
+      <div class="overlay" id="card">
+        <div class="sheet">
+          <img class="wordmark" src="/logo-2c.png" alt="fran" />
+          <p class="eyebrow">Bugis+ · #01-04 · after close</p>
+          <h1>FRAN GAME</h1>
+          <p class="lede">It's closing time. Wisp is dreaming. None of this is real.</p>
+          <ul class="how">
+            <li><strong>Move</strong> with WASD, the stick, or click the floor.</li>
+            <li><strong>Hold Yoink</strong> beside a shelf. Testers pile onto your head as a loose haul.</li>
+            <li><strong>Stop in a glowing spot</strong> to scoff the haul into banked score. A big haul slows you down.</li>
+            <li><strong>60 seconds.</strong> Everything floats back to the shelf by morning.</li>
+          </ul>
+          <button type="button" class="big" id="btn-start">Start dreaming</button>
+          <p class="fine" id="card-best"></p>
+        </div>
+      </div>
+
+      <div class="overlay" id="results" hidden>
+        <div class="sheet">
+          <p class="eyebrow" id="results-kicker">Lights on</p>
+          <h1 id="results-title">Time's up</h1>
+          <div class="result-score">
+            <span class="result-num" id="results-score">0</span>
+            <span class="result-label">banked</span>
+          </div>
+          <ul class="result-rows" id="results-rows"></ul>
+          <p class="result-best" id="results-best"></p>
+          <button type="button" class="big" id="btn-again">Run again</button>
+          <p class="fine">It was all a dream. Nothing left the shelf.</p>
+        </div>
+      </div>
+
+      <p class="boot-error" id="boot-error" hidden></p>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
