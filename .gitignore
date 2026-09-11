@@ -6,3 +6,5 @@ tools/shots/
 .DS_Store
 Thumbs.db
 _p0_*
+
+.vercel

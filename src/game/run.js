@@ -10,12 +10,13 @@ import { createHud } from './hud.js';
 import { createAudio } from './audio.js';
 import { createDreamView } from './dream.js';
 import { scoffBonuses, loadBest, saveBest, RULES } from './score.js';
+import { createJarell } from './jarell.js';
 
 /**
  * Run state machine: idle (framing card) → playing → results → playing …
  * P0: 60 s timer, yoink on gondola faces + endcaps, head haul with slowdown,
  * hide spots with scoff, results with device-local best. No guards, no
- * cameras, no board, no crowns yet.
+ * cameras, no board, no crowns yet. Ambient egg NPC: jarell.
  */
 export const RUN_SECONDS = 60;
 const YOINK_EVERY = 0.18;
@@ -28,6 +29,7 @@ export function createRun({ scene, camera, canvas, storeRoot, wisp }) {
   const haul = createHaul(scene, wisp);
   const spots = resolveHideSpots();
   const hide = createHideSpots(scene, spots);
+  const jarell = createJarell(scene);
   const view = createGameCamera(camera, wisp);
   const hud = createHud();
   const audio = createAudio();
@@ -64,6 +66,7 @@ export function createRun({ scene, camera, canvas, storeRoot, wisp }) {
 
   if (!spots.length) console.warn('[floor] no hide spots resolved; scoffing is impossible');
   console.info(`[game] ${pickups.items.length} yoinkable props on ${pickups.faces.size} faces · ${spots.length} hide spots`);
+  console.info(`[jarell] egg on floor · ${jarell.beats.sales.length} sales + ${jarell.beats.boh.length} BOH beats`);
 
   hud.setBest(best.score);
   hud.setBanked(0);
@@ -77,6 +80,7 @@ export function createRun({ scene, camera, canvas, storeRoot, wisp }) {
     pickups.restoreAll();
     haul.clear();
     hide.reset();
+    jarell.reset();
     wisp.root.position.set(spawn.x, 0.62, spawn.z);
     wisp.clearDest();
     wisp.setWish(0, 0);
@@ -288,6 +292,7 @@ export function createRun({ scene, camera, canvas, storeRoot, wisp }) {
     }
 
     haul.update(dt, vel.x, vel.z);
+    jarell.update(dt, time);
     view.update(dt);
     dream.update();
     hud.updatePopups(camera, dt);
@@ -300,6 +305,7 @@ export function createRun({ scene, camera, canvas, storeRoot, wisp }) {
     pickups,
     haul,
     hide,
+    jarell,
     spots,
     hud,
     view,

@@ -48,6 +48,8 @@ Until the stocker exposes `take()`, `src/game/steal.js` rebuilds the pickup regi
 | `hud.js` | Timer, banked, haul, hints, toasts, 3D popups, framing card, results |
 | `score.js` | Points per prop type, scoff bonuses, local best in `localStorage` |
 | `audio.js` | Tiny WebAudio synth (yoink, scoff, hide, last call, end) |
+| `jarell.js` | Ambient skipping egg NPC with nametag jarell; BOH wander |
+| `floor/jarellBeats.js` | Sales + BOH patrol waypoints, `blockersAt` validated |
 
 Scoring (P0): bottle / tube / packet 1 · compact / box 2 · 10+ in one scoff +25 % · three categories in one scoff +10 · cap 600.
 
