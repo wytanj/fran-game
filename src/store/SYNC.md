@@ -4,10 +4,10 @@ These files are copied verbatim from the sibling `fran-zone` checkout by
 `npm run sync-store`. Fix things upstream in fran-zone, then re-sync.
 
 - **Source:** https://github.com/wytanj/fran-zone.git
-- **Commit:** `ff85c789ab3b8b6560e2be798cef8f12da07f754`
-- **Committed:** 2026-09-10T12:49:12+08:00
-- **Subject:** Add FRAN GAME build plan (Pizza Possum on Bugis+ floor).
-- **Synced:** 2026-09-10T06:28:38.511Z
+- **Commit:** `c28b11576c859a8842cfbc46d3396cf3d76dc503` (working tree had uncommitted changes)
+- **Committed:** 2026-09-11T15:30:05+08:00
+- **Subject:** Lock Bugis+ floor to FULL technical set 110926 (56p).
+- **Synced:** 2026-09-11T07:30:50.378Z
 
 ## Files
 

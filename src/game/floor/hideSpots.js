@@ -1,4 +1,4 @@
-import { gondolas, queueFixtures, experience, doors, blockersAt } from '../../store/layout.js';
+﻿import { gondolas, queueFixtures, experience, doors, blockersAt } from '../../store/layout.js';
 
 /**
  * Hide spots keyed to fixture ids, so a plan revision moves them.
@@ -26,7 +26,10 @@ function locate(spec) {
     case 'queue': {
       const [a, b] = queueFixtures;
       if (!a || !b) return null;
-      return { x: (a.x + b.x) / 2, z: (a.z + b.z) / 2 };
+      // Stand just east of the queue T (head+stem), not inside the stem AABB.
+      const x = Math.max(a.x + a.w / 2, b.x + b.w / 2) + END_GAP;
+      const z = (a.z + b.z) / 2;
+      return { x, z };
     }
     case 'gondola-end': {
       const g = gondolas.find((item) => item.id === spec.fixture);
@@ -66,3 +69,4 @@ export function resolveHideSpots() {
   }
   return out;
 }
+

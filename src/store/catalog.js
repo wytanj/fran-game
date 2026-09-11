@@ -425,7 +425,9 @@ export const catalog = {
         "Aestura",
         "Anua",
         "APLB",
-        "April Skin"
+        "April Skin",
+        "Benton",
+        "Celimax"
       ],
       "suncare": [
         "Anua",

@@ -110,5 +110,23 @@ export function createMaterials() {
     }),
     black: color(0x141414, { roughness: 0.4 }),
     cream: color(brand.cream, { roughness: 0.85 }),
+    blush: color(0xf2c3ce, { roughness: 0.5, metalness: 0.08 }),
+    panelFrost: color(0xffffff, {
+      roughness: 0.15,
+      metalness: 0.02,
+      transparent: true,
+      opacity: 0.38,
+      side: THREE.DoubleSide,
+    }),
+    lightbox: color(0xfffbe8, {
+      roughness: 0.3,
+      emissive: 0xfff0b8,
+      emissiveIntensity: 0.85,
+    }),
+    hygiene: color(0x9fd8ef, {
+      roughness: 0.4,
+      emissive: 0x9fd8ef,
+      emissiveIntensity: 0.12,
+    }),
   };
 }
