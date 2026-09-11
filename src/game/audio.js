@@ -61,6 +61,11 @@ export function createAudio() {
     end() {
       [660, 520, 392].forEach((f, i) => tone({ freq: f, type: 'triangle', dur: 0.3, gain: 0.6, at: i * 0.16 }));
     },
+    bust() {
+      // Cute egg-gotcha wobble — dream over, not a siren.
+      [520, 390, 260].forEach((f, i) => tone({ freq: f, to: f * 0.7, type: 'triangle', dur: 0.22, gain: 0.7, at: i * 0.12 }));
+      tone({ freq: 180, to: 90, type: 'sine', dur: 0.35, gain: 0.45, at: 0.28 });
+    },
     go() {
       [392, 523, 784].forEach((f, i) => tone({ freq: f, type: 'triangle', dur: 0.14, gain: 0.6, at: i * 0.08 }));
     },

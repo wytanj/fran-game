@@ -6,10 +6,15 @@ import { resolveJarellBeats } from './floor/jarellBeats.js';
 
 /**
  * jarell — little cream egg who skips the Bugis+ floor.
- * Ambient dream NPC only: no chase, no heat, no bust. Sometimes ducks into BOH.
+ * Skips around on ambient beats (sometimes ducks into BOH). Proximity catch
+ * is handled by run.js (Glow Guard-style): touch = busted / dream over.
  */
 
 const RADIUS = 0.18;
+/** Horizontal catch radius vs Wisp — matches Glow Guard doc (0.5 m). */
+export const CATCH_RADIUS = 0.5;
+/** Seconds of continuous contact before bust. */
+export const CATCH_HOLD = 0.25;
 const SPEED = 1.15;
 const BODY_Y = 0.28;
 const BOH_CHANCE = 0.28;

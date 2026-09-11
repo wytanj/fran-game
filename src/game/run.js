@@ -10,15 +10,15 @@ import { createHud } from './hud.js';
 import { createAudio } from './audio.js';
 import { createDreamView } from './dream.js';
 import { scoffBonuses, loadBest, saveBest, RULES } from './score.js';
-import { createJarell } from './jarell.js';
+import { createJarell, CATCH_RADIUS, CATCH_HOLD } from './jarell.js';
 
 /**
  * Run state machine: idle (framing card) → playing → results → playing …
- * P0: 60 s timer, yoink on gondola faces + endcaps, head haul with slowdown,
- * hide spots with scoff, results with device-local best. No guards, no
- * cameras, no board, no crowns yet. Ambient egg NPC: jarell.
+ * P0: 30 s timer, yoink on gondola faces + endcaps, head haul with slowdown,
+ * hide spots with scoff, results with device-local best. Ambient egg NPC
+ * jarell: proximity catch ends the run as busted (Glow Guard-style).
  */
-export const RUN_SECONDS = 60;
+export const RUN_SECONDS = 30;
 const YOINK_EVERY = 0.18;
 const SCOFF_PER_SEC = 4;
 const LAST_CALL = 10;
@@ -47,6 +47,7 @@ export function createRun({ scene, camera, canvas, storeRoot, wisp }) {
   let timeLeft = RUN_SECONDS;
   let yoinkCd = 0;
   let scoffAcc = 0;
+  let catchAcc = 0;
   let banked = 0;
   let scoffed = 0;
   let yoinked = 0;
@@ -89,6 +90,7 @@ export function createRun({ scene, camera, canvas, storeRoot, wisp }) {
     timeLeft = RUN_SECONDS;
     yoinkCd = 0;
     scoffAcc = 0;
+    catchAcc = 0;
     banked = 0;
     scoffed = 0;
     yoinked = 0;
@@ -109,7 +111,8 @@ export function createRun({ scene, camera, canvas, storeRoot, wisp }) {
     state = 'playing';
   }
 
-  function finish() {
+  /** End the run: timer timeout or jarell catch (busted). Reuses one results path. */
+  function finish({ busted = false } = {}) {
     state = 'results';
     input.setEnabled(false);
     closeSession();
@@ -118,8 +121,13 @@ export function createRun({ scene, camera, canvas, storeRoot, wisp }) {
     setHiddenLook(false);
     hud.setHaul([], false);
     hud.setLastCall(false);
-    dream.setDim(0.85);
-    audio.end();
+    dream.setDim(busted ? 0.55 : 0.85);
+    if (busted) {
+      audio.bust();
+      hud.toast('jarell gotcha · dream over');
+    } else {
+      audio.end();
+    }
     // Everything back on the shelf by morning.
     setTimeout(() => {
       if (state === 'results') pickups.restoreAll();
@@ -132,8 +140,8 @@ export function createRun({ scene, camera, canvas, storeRoot, wisp }) {
       hud.setBest(best.score);
     }
     hud.showResults({
-      kicker: 'Lights on',
-      title: newBest ? 'New best!' : "Time's up",
+      kicker: busted ? 'Busted' : 'Lights on',
+      title: busted ? 'jarell got you' : newBest ? 'New best!' : "Time's up",
       banked,
       best: best.score,
       newBest,
@@ -213,6 +221,23 @@ export function createRun({ scene, camera, canvas, storeRoot, wisp }) {
     if (res === 'cleared') hud.toast(`${item.face.gondola.name} face cleared · move on`);
   }
 
+  /** Glow Guard-style proximity: within CATCH_RADIUS for CATCH_HOLD -> busted. */
+  function jarellCatchTick(dt, hidden) {
+    if (hidden) {
+      catchAcc = 0;
+      return false;
+    }
+    const dx = jarell.position.x - wisp.position.x;
+    const dz = jarell.position.z - wisp.position.z;
+    if (Math.hypot(dx, dz) < CATCH_RADIUS) {
+      catchAcc += dt;
+      if (catchAcc >= CATCH_HOLD) return true;
+    } else {
+      catchAcc = 0;
+    }
+    return false;
+  }
+
   function update(dt, time) {
     const playing = state === 'playing';
     let moving = false;
@@ -269,23 +294,27 @@ export function createRun({ scene, camera, canvas, storeRoot, wisp }) {
         else hud.hint('Find a glowing spot and stop to scoff.');
       }
 
-      if (timeLeft <= LAST_CALL && !lastCall) {
+      if (jarellCatchTick(dt, r.hidden)) {
+        finish({ busted: true });
+      } else if (timeLeft <= LAST_CALL && !lastCall) {
         lastCall = true;
         hud.toast('Last call');
         hud.setLastCall(true);
         dream.setDim(0.6);
       }
-      if (lastCall) {
+      if (state === 'playing' && lastCall) {
         const s = Math.ceil(timeLeft);
         if (s !== lastTick) {
           lastTick = s;
           audio.tick();
         }
       }
-      hud.setTimer(timeLeft);
-      if (timeLeft <= 0) {
-        timeLeft = 0;
-        finish();
+      if (state === 'playing') {
+        hud.setTimer(timeLeft);
+        if (timeLeft <= 0) {
+          timeLeft = 0;
+          finish();
+        }
       }
     } else {
       hide.update(dt, time, wisp.position.x, wisp.position.z, true);

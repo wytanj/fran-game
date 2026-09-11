@@ -2,7 +2,7 @@ import * as THREE from 'three';
 
 /**
  * Fixed three-quarter follow camera. No orbit, no pan, no plan mode:
- * readability beats freedom in a 60 s game.
+ * readability beats freedom in a 30 s game.
  */
 export const VIEW = { yaw: -Math.PI / 4, pitch: 0.95, dist: 6.5 };
 
